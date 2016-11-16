@@ -24,13 +24,13 @@ public class EncryptServer {
                 .addService(new EncryptImpl())
                 .build()
                 .start();
-        log.info("Server started, listening on :" + PORT);
+        log.info("Server started, listening on :{}", PORT);
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                System.err.println("*** shutting down gRPC server since JVM is shutting down");
+                log.error("*** shutting down gRPC server since JVM is shutting down");
                 EncryptServer.this.stop();
-                System.err.println("*** server shut down");
+                log.error("*** server shut down");
             }
         });
     }
