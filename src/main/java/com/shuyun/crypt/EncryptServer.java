@@ -5,6 +5,7 @@ import io.grpc.ServerBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
 
 /**
  * @author hewei
@@ -22,6 +23,7 @@ public class EncryptServer {
     public void start() throws IOException {
         server = ServerBuilder.forPort(PORT)
                 .addService(new EncryptImpl())
+                .executor(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2))
                 .build()
                 .start();
         log.info("Server started, listening on :{}", PORT);
