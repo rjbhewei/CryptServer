@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="debug">
+
+    <Properties>
+        <property name="LOG_HOME">/var/log</property>
+        <property name="LOG_BACK_HOME">/var/logbak</property>
+        <property name="LOG_PATTERN">${env:SERVICE_NAME}/${env:APP_VERSION}/${env:ENVIRONMENT}/${env:SANDBOX}/${env:MESOS_TASK_ID}/${env:SERVICE_NAME}.log</property>
+    </Properties>
+
+    <appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%class{0}:%method:%line] [%t] [-[%msg]-] %n"/>
+        </Console>
+
+        <!--<File name="fileAppender" fileName="${LOG_HOME}/${env:SERVICE_NAME}/${env:APP_VERSION}/${env:ENVIRONMENT}/${env:SANDBOX}/${env:MESOS_TASK_ID}/${env:SERVICE_NAME}.log">-->
+        <!--<PatternLayout>-->
+        <!--<pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%class{0}:%method:%line] [%t] [-[%msg]-] %n</pattern>-->
+        <!--</PatternLayout>-->
+        <!--</File>-->
+
+        <RollingFile name="RollingFile" fileName="${LOG_HOME}/${LOG_PATTERN}" filePattern="${LOG_BACK_HOME}/${LOG_PATTERN}.%d{yyyyMMdd}">
+            <PatternLayout>
+                <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%class{0}:%method:%line] [%t] [-[%msg]-] %n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" />
+            </Policies>
+            <DefaultRolloverStrategy max="15"/>
+        </RollingFile>
+        <Async name="AsyncRollingFile" includeLocation="true"> <!--includeLocation=true对性能有影响,默认false-->
+            <AppenderRef ref="RollingFile" />
+        </Async>
+    </appenders>
+
+    <loggers>
+        <root level="info">
+            <!--<appender-ref ref="console"/>-->
+            <!--<appender-ref ref="RollingFile"/>-->
+            <AppenderRef ref="AsyncRollingFile"/>
+        </root>
+    </loggers>
+
+</configuration>
